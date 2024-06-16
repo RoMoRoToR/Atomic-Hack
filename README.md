@@ -33,3 +33,10 @@
 
 </aside>
 Размеченный датасет, состоящий из фотографий и разметочных файлов.
+
+# Инструкция по развёртыванию
+1. virtualenv venv
+2. pip install -r requirements.txt
+3. fill `TOKEN` in `.env`
+4. py main.py
+
