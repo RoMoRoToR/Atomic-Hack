@@ -1,0 +1,2 @@
+ANSWER_IMAGE_FILENAME: str = 'answer.jpg'
+ENTERING_IMAGE_EXTENSION: str = '.jpg'

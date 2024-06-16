@@ -7,11 +7,11 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import Message, BufferedInputFile
 
+from constants import ANSWER_IMAGE_FILENAME, ENTERING_IMAGE_EXTENSION
 from config import TOKEN
 from ai import predict
 
 dp: Dispatcher = Dispatcher()
-_ANSWER_IMAGE_FILENAME: str = 'answer.jpg'
 
 
 @dp.message(F.photo)
@@ -19,12 +19,10 @@ async def photo_handler(message: Message) -> None:
     file_id: str = message.photo[-1].file_id
     image_io: BinaryIO = await message.bot.download(file=file_id)
 
-    answer_image_bytes, class_ = predict(image_bytes=image_io.read())
+    answer_image_bytes: bytes = predict(image_bytes=image_io.read(), extension=ENTERING_IMAGE_EXTENSION)
 
-    photo: BufferedInputFile = BufferedInputFile(image_io.read(), _ANSWER_IMAGE_FILENAME)
-    caption: str = f'Класс: {class_}'
-
-    await message.answer_photo(photo, caption=caption)
+    photo: BufferedInputFile = BufferedInputFile(answer_image_bytes, ANSWER_IMAGE_FILENAME)
+    await message.answer_photo(photo)
 
 
 async def main() -> None:
@@ -32,6 +30,6 @@ async def main() -> None:
     await dp.start_polling(bot)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())
